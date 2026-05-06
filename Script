@@ -1,0 +1,399 @@
+/* ============================================
+   JavaScript for Birthday Surprise Website
+   Interactive functionality and animations
+   ============================================ */
+
+// ============================================
+// STATE MANAGEMENT
+// ============================================
+
+let currentScreen = 1;
+const totalScreens = 6;
+let currentGallerySlide = 0;
+let gallerySlides = [];
+let isPlaying = false;
+let typewriterIndex = 0;
+
+// ============================================
+// MESSAGE CUSTOMIZATION
+// ============================================
+
+// CUSTOMIZE: Edit this message for your friend
+const messageText = `Random bakchodi se leke unforgettable memories tak,
+tu hi meri favorite person hai.
+Thank you for being my best friend.
+Change mat hona, idiot ❤️`;
+
+// ============================================
+// INITIALIZATION
+// ============================================
+
+document.addEventListener('DOMContentLoaded', function() {
+    initializeWebsite();
+});
+
+function initializeWebsite() {
+    // Initialize screens
+    showScreen(1);
+    
+    // Initialize gallery
+    initializeGallery();
+    
+    // Setup event listeners
+    setupEventListeners();
+    
+    // Setup audio events
+    setupAudioEvents();
+    
+    // Create initial gallery indicators
+    createGalleryIndicators();
+    
+    console.log('🎉 Birthday Surprise Website Initialized!');
+}
+
+// ============================================
+// SCREEN NAVIGATION
+// ============================================
+
+function showScreen(screenNumber) {
+    // Hide all screens
+    document.querySelectorAll('.screen').forEach(screen => {
+        screen.classList.remove('active');
+    });
+    
+    // Show current screen
+    const currentScreenElement = document.getElementById(`screen-${screenNumber}`);
+    if (currentScreenElement) {
+        currentScreenElement.classList.add('active');
+        currentScreen = screenNumber;
+        updateScreenCounter();
+        
+        // Run screen-specific actions
+        onScreenChange(screenNumber);
+    }
+}
+
+function nextScreen() {
+    if (currentScreen < totalScreens) {
+        showScreen(currentScreen + 1);
+    } else {
+        showScreen(1); // Loop back to first screen
+    }
+}
+
+function previousScreen() {
+    if (currentScreen > 1) {
+        showScreen(currentScreen - 1);
+    } else {
+        showScreen(totalScreens); // Loop to last screen
+    }
+}
+
+function restartWebsite() {
+    // Reset variables
+    currentGallerySlide = 0;
+    typewriterIndex = 0;
+    isPlaying = false;
+    
+    // Stop music
+    const audio = document.getElementById('bgMusic');
+    audio.pause();
+    audio.currentTime = 0;
+    document.getElementById('musicIcon').textContent = '🎵';
+    
+    // Reset message
+    document.getElementById('typewriter').textContent = '';
+    
+    // Show first screen
+    showScreen(1);
+    
+    // Scroll to top
+    window.scrollTo(0, 0);
+    
+    console.log('🔄 Website Restarted!');
+}
+
+// ============================================
+// SCREEN-SPECIFIC ACTIONS
+// ============================================
+
+function onScreenChange(screenNumber) {
+    switch(screenNumber) {
+        case 4:
+            // Start typewriter effect
+            startTypewriter();
+            break;
+        case 5:
+            // Initialize music
+            resetMusicPlayer();
+            break;
+        case 6:
+            // Start floating hearts
+            createFloatingHearts();
+            break;
+    }
+}
+
+// ============================================
+// SCREEN 3: GALLERY FUNCTIONALITY
+// ============================================
+
+function initializeGallery() {
+    gallerySlides = document.querySelectorAll('.gallery-slide');
+    if (gallerySlides.length > 0) {
+        gallerySlides[0].classList.add('active');
+        updateIndicators();
+    }
+}
+
+function changeGallerySlide(n) {
+    currentGallerySlide += n;
+    
+    // Wrap around
+    if (currentGallerySlide >= gallerySlides.length) {
+        currentGallerySlide = 0;
+    } else if (currentGallerySlide < 0) {
+        currentGallerySlide = gallerySlides.length - 1;
+    }
+    
+    // Show slide
+    gallerySlides.forEach(slide => slide.classList.remove('active'));
+    gallerySlides[currentGallerySlide].classList.add('active');
+    
+    // Update indicators
+    updateIndicators();
+}
+
+function createGalleryIndicators() {
+    const indicatorsContainer = document.getElementById('indicators');
+    indicatorsContainer.innerHTML = '';
+    
+    for (let i = 0; i < gallerySlides.length; i++) {
+        const indicator = document.createElement('div');
+        indicator.className = 'indicator';
+        if (i === 0) indicator.classList.add('active');
+        indicator.addEventListener('click', function() {
+            currentGallerySlide = i;
+            gallerySlides.forEach(slide => slide.classList.remove('active'));
+            gallerySlides[i].classList.add('active');
+            updateIndicators();
+        });
+        indicatorsContainer.appendChild(indicator);
+    }
+}
+
+function updateIndicators() {
+    const indicators = document.querySelectorAll('.indicator');
+    indicators.forEach((indicator, index) => {
+        indicator.classList.remove('active');
+        if (index === currentGallerySlide) {
+            indicator.classList.add('active');
+        }
+    });
+}
+
+// ============================================
+// SCREEN 4: TYPEWRITER EFFECT
+// ============================================
+
+function startTypewriter() {
+    if (typewriterIndex === 0) {
+        typewriterEffect();
+    }
+}
+
+function typewriterEffect() {
+    const typewriterElement = document.getElementById('typewriter');
+    
+    if (typewriterIndex < messageText.length) {
+        typewriterElement.textContent += messageText[typewriterIndex];
+        typewriterIndex++;
+        setTimeout(typewriterEffect, 30); // Adjust speed here (lower = faster)
+    }
+}
+
+// ============================================
+// SCREEN 5: MUSIC PLAYER
+// ============================================
+
+function toggleMusic() {
+    const audio = document.getElementById('bgMusic');
+    const icon = document.getElementById('musicIcon');
+    
+    if (isPlaying) {
+        audio.pause();
+        icon.textContent = '🎵';
+        isPlaying = false;
+    } else {
+        audio.play().catch(error => {
+            console.log('Audio playback error:', error);
+            alert('Unable to play music. Please try again or check file path.');
+        });
+        icon.textContent = '⏸️';
+        isPlaying = true;
+    }
+}
+
+function resetMusicPlayer() {
+    const audio = document.getElementById('bgMusic');
+    document.getElementById('musicIcon').textContent = '🎵';
+    isPlaying = false;
+    audio.currentTime = 0;
+    audio.pause();
+    updateMusicProgress();
+}
+
+function setupAudioEvents() {
+    const audio = document.getElementById('bgMusic');
+    
+    // Update progress
+    audio.addEventListener('timeupdate', updateMusicProgress);
+    
+    // Reset when ended
+    audio.addEventListener('ended', function() {
+        document.getElementById('musicIcon').textContent = '🎵';
+        isPlaying = false;
+        audio.currentTime = 0;
+    });
+}
+
+function updateMusicProgress() {
+    const audio = document.getElementById('bgMusic');
+    const progress = document.getElementById('progress');
+    const currentTimeEl = document.getElementById('currentTime');
+    const durationEl = document.getElementById('duration');
+    
+    // Update progress bar
+    if (audio.duration) {
+        const percent = (audio.currentTime / audio.duration) * 100;
+        progress.style.width = percent + '%';
+    }
+    
+    // Update time displays
+    currentTimeEl.textContent = formatTime(audio.currentTime);
+    durationEl.textContent = formatTime(audio.duration || 0);
+}
+
+function formatTime(seconds) {
+    if (isNaN(seconds)) return '0:00';
+    
+    const minutes = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${minutes}:${secs.toString().padStart(2, '0')}`;
+}
+
+// ============================================
+// SCREEN 2: CONFETTI EFFECT
+// ============================================
+
+function triggerConfetti() {
+    const container = document.getElementById('confetti');
+    container.innerHTML = ''; // Clear previous confetti
+    
+    // Create confetti pieces
+    for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        
+        // Random colors
+        const colors = ['#ff6b9d', '#c44569', '#ffa502', '#ffc0d9', '#f5a6ff'];
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        
+        // Random position
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti.style.top = '-10px';
+        
+        // Random animation duration
+        const duration = 2 + Math.random() * 1.5;
+        confetti.style.animation = `confettiFall ${duration}s linear`;
+        
+        // Random rotation
+        confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+        
+        container.appendChild(confetti);
+    }
+    
+    console.log('🎉 Confetti triggered!');
+}
+
+// ============================================
+// SCREEN 6: FLOATING HEARTS
+// ============================================
+
+function createFloatingHearts() {
+    // Hearts already animated by CSS, just ensure they're visible
+    const heartsContainer = document.getElementById('floatingHearts');
+    if (heartsContainer) {
+        heartsContainer.style.animation = 'none';
+        setTimeout(() => {
+            heartsContainer.style.animation = '';
+        }, 10);
+    }
+}
+
+// ============================================
+// SCREEN COUNTER UPDATE
+// ============================================
+
+function updateScreenCounter() {
+    document.getElementById('screenCounter').textContent = `${currentScreen} / ${totalScreens}`;
+}
+
+// ============================================
+// EVENT LISTENERS
+// ============================================
+
+function setupEventListeners() {
+    // Keyboard navigation
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'ArrowRight') {
+            nextScreen();
+        } else if (event.key === 'ArrowLeft') {
+            previousScreen();
+        }
+    });
+    
+    // Touch/Swipe support for mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    document.addEventListener('touchstart', function(e) {
+        touchStartX = e.changedTouches[0].screenX;
+    });
+    
+    document.addEventListener('touchend', function(e) {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    });
+    
+    function handleSwipe() {
+        // If moved right, go to previous screen
+        if (touchEndX < touchStartX - 50) {
+            nextScreen();
+        }
+        // If moved left, go to next screen
+        if (touchEndX > touchStartX + 50) {
+            previousScreen();
+        }
+    }
+}
+
+// ============================================
+// UTILITY FUNCTIONS
+// ============================================
+
+// Smooth scroll behavior
+function smoothScroll(element) {
+    if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+// Console welcome message
+console.log('%c🎉 Happy Birthday Bhoomi! 🎉', 'font-size: 24px; color: #ff6b9d; font-weight: bold;');
+console.log('%cMade with 💖 for your special day!', 'font-size: 14px; color: #c44569; font-weight: bold;');
+console.log('%cCustomization Guide:', 'font-size: 12px; color: #ffa502; font-weight: bold;');
+console.log('1. Change images in index.html gallery section');
+console.log('2. Change music by updating audio src');
+console.log('3. Edit message in script.js messageText variable');
+console.log('4. Customize colors in style.css :root section');
