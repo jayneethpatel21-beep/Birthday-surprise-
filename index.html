@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎉 Happy Birthday Bhoomi!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Screen 1: Opening Screen -->
+    <div class="screen fade-in" id="screen-1">
+        <div class="opening-container">
+            <div class="animated-hearts">
+                <span class="heart">💖</span>
+                <span class="heart">💖</span>
+                <span class="heart">💖</span>
+            </div>
+            
+            <h1 class="opening-text">Hey Bhoot 👻💖</h1>
+            
+            <p class="opening-subtext">I have a surprise for you...</p>
+            
+            <button class="btn-primary" onclick="nextScreen()">
+                Tap to open 🎁
+            </button>
+            
+            <div class="glowing-circle"></div>
+        </div>
+    </div>
+
+    <!-- Screen 2: Surprise Screen -->
+    <div class="screen" id="screen-2">
+        <div class="surprise-container">
+            <div class="confetti-container" id="confetti"></div>
+            
+            <h1 class="surprise-text">Happy Birthday<br>Bhoottt💗🎂✨</h1>
+            
+            <div class="celebration-emoji">🎉🎊🎈🎁🎀🌟💫✨</div>
+            
+            <button class="btn-secondary" onclick="triggerConfetti()">
+                Celebrate! 🎉
+            </button>
+        </div>
+    </div>
+
+    <!-- Screen 3: Photo Gallery -->
+    <div class="screen" id="screen-3">
+        <div class="gallery-container">
+            <h2 class="gallery-title">Our Beautiful Memories 📸</h2>
+            
+            <div class="gallery-wrapper">
+                <!-- CUSTOMIZE: Replace image URLs below with your own photos -->
+                <div class="gallery-slide fade">
+                    <img src="https://via.placeholder.com/500x400?text=Memory+1" alt="Memory 1">
+                </div>
+                <div class="gallery-slide fade">
+                    <img src="https://via.placeholder.com/500x400?text=Memory+2" alt="Memory 2">
+                </div>
+                <div class="gallery-slide fade">
+                    <img src="https://via.placeholder.com/500x400?text=Memory+3" alt="Memory 3">
+                </div>
+                <div class="gallery-slide fade">
+                    <img src="https://via.placeholder.com/500x400?text=Memory+4" alt="Memory 4">
+                </div>
+                <div class="gallery-slide fade">
+                    <img src="https://via.placeholder.com/500x400?text=Memory+5" alt="Memory 5">
+                </div>
+                
+                <!-- Navigation Arrows -->
+                <a class="gallery-nav prev" onclick="changeGallerySlide(-1)">❮</a>
+                <a class="gallery-nav next" onclick="changeGallerySlide(1)">❯</a>
+            </div>
+            
+            <!-- Gallery Indicators -->
+            <div class="gallery-indicators" id="indicators"></div>
+        </div>
+    </div>
+
+    <!-- Screen 4: Message Screen -->
+    <div class="screen" id="screen-4">
+        <div class="message-container">
+            <h2 class="message-title">A Little Message For You 💌</h2>
+            
+            <div class="message-box">
+                <p class="message-text" id="typewriter"></p>
+            </div>
+            
+            <div class="decorative-elements">
+                <span class="decoration">✨</span>
+                <span class="decoration">💖</span>
+                <span class="decoration">✨</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen 5: Music Screen -->
+    <div class="screen" id="screen-5">
+        <div class="music-container">
+            <h2 class="music-title">Let's Celebrate Together 🎵</h2>
+            
+            <!-- CUSTOMIZE: Replace audio src with your birthday music -->
+            <audio id="bgMusic" preload="auto">
+                <source src="https://assets.mixkit.co/active_storage/music/b5e90e04-a23c-4c78-b7d8-1a4d5f0c8a0e-birthday-bash.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+            
+            <div class="music-player">
+                <button class="music-btn" onclick="toggleMusic()">
+                    <span class="music-icon" id="musicIcon">🎵</span>
+                </button>
+                <p class="music-text">Click to play birthday music 🎶</p>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+            
+            <!-- Music Info -->
+            <div class="music-info">
+                <span id="currentTime">0:00</span>
+                <span id="duration">0:00</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen 6: Final Screen -->
+    <div class="screen" id="screen-6">
+        <div class="final-container">
+            <h1 class="final-text">Once again,<br>Happy Birthday<br>Bhoomiiii 💫</h1>
+            
+            <!-- Floating Hearts -->
+            <div class="floating-hearts" id="floatingHearts">
+                <div class="heart-float">💖</div>
+                <div class="heart-float">💖</div>
+                <div class="heart-float">💖</div>
+                <div class="heart-float">💖</div>
+                <div class="heart-float">💖</div>
+            </div>
+            
+            <p class="final-text-small">Thank you for being my favorite person ❤️</p>
+        </div>
+    </div>
+
+    <!-- Navigation Controls -->
+    <div class="navigation-controls">
+        <button class="nav-btn" onclick="previousScreen()">← Back</button>
+        <span class="screen-counter" id="screenCounter">1 / 6</span>
+        <button class="nav-btn" onclick="nextScreen()">Next →</button>
+    </div>
+
+    <!-- Restart Button -->
+    <button class="restart-btn" onclick="restartWebsite()">🔄 Restart</button>
+
+    <!-- Script -->
+    <script src="script.js"></script>
+</body>
+</html>
